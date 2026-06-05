@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Поиск вакансий</title>
+  </head>
+  <body>
+    <h1>Список контактов на JS</h1>
+
+    <form id="contactForm">
+      <input
+        type="text"
+        name="Имя"
+        value=""
+        minlength="2"
+        placeholder="Имя HR"
+        id="hrName"
+        required
+      />
+      <input
+        type="text"
+        name="Вакансия"
+        value=""
+        placeholder="Вакансия"
+        id="vacancyName"
+        minlength="2"
+        required
+      />
+
+      <input
+        type="tel"
+        name="Номер телефона"
+        value=""
+        placeholder="Номер телефона"
+        id="phoneNumber"
+        pattern="^((\+7|7|8)+([0-9]){10})$"
+        required
+      />
+
+      <button type="submit">Добавить</button>
+    </form>
+
+    <button type="button" id="clearBtn">Очистить список</button>
+    <button type="button" id="searchBtn">Искать по имени</button>
+
+    <div id="letterList"></div>
+
+    <div id="editModalContainer" class="hidden">
+      <form id="editModal">
+        <input id="editHrName" type="text" required minlength="2" />
+        <input id="editVacancyName" type="text" required minlength="2" />
+        <input id="editPhoneNumber" type="tel" required />
+
+        <button type="submit" id="submitEditBtn">Сохранить</button>
+        <button type="button" id="cancelEditBtn">Отмена</button>
+      </form>
+    </div>
+
+    <div id="searchModal" class="hidden">
+      <div class="search-modal-header">
+        <div>Поиск вакансий</div>
+        <button id="exitModalBtn">X</button>
+      </div>
+      <input type="text" id="searchInput" />
+      <div id="searchItems"></div>
+    </div>
+    <script src="./script.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,216 @@
+body {
+  font-family: "Inter";
+  background-color: #302222;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ul,
+li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#letterList {
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
+  max-width: 100dvw;
+  width: 100%;
+  gap: 6px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.letterBox {
+  padding: 0 40px;
+}
+
+.letterBtn {
+  background-color: coral;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  height: 60px;
+  border-radius: 20px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.letterBtn:hover {
+  background-color: indianred;
+  transition: 400ms ease;
+}
+
+.letterItems .dataVisualize {
+  padding: 16px;
+  background-color: lightcoral;
+  color: black;
+  border-radius: 20px;
+}
+
+.dataVisualize p {
+  margin: 4px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#editModalContainer {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 2000;
+  width: 100dvw;
+  height: 100dvh;
+}
+
+#editModal {
+  background-color: #302222;
+  color: white;
+  border: 2px solid coral;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+
+  width: 400px;
+  max-width: 80dvw;
+
+  padding: 24px;
+  border-radius: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#editModal input {
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  font-size: 16px;
+  outline: none;
+}
+
+#editModal input:focus {
+  border-color: coral;
+}
+
+#editModal button {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background-color: coral;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#editModal button:hover {
+  background-color: indianred;
+  transition: 400ms ease;
+}
+
+#searchModal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 1000;
+  width: 100dvw;
+  height: 100dvh;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.search-modal-header {
+  width: 520px;
+  max-width: 90dvw;
+  box-sizing: border-box;
+  background-color: coral;
+  color: white;
+  border-radius: 20px 20px 0 0;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+#exitModalBtn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background-color: #302222;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+#exitModalBtn:hover {
+  background-color: indianred;
+  transition: 400ms ease;
+}
+
+#searchInput,
+#searchItems {
+  width: 520px;
+  max-width: 90dvw;
+  box-sizing: border-box;
+}
+
+#searchInput {
+  padding: 14px 16px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-size: 16px;
+  outline: none;
+}
+
+#searchInput:focus {
+  border-color: coral;
+}
+
+#searchItems {
+  min-height: 120px;
+  max-height: 60dvh;
+  overflow-y: auto;
+  background-color: #302222;
+  border: 2px solid coral;
+  border-radius: 0 0 20px 20px;
+  padding: 16px;
+}
+
+#searchItems .dataVisualize {
+  padding: 16px;
+  background-color: lightcoral;
+  color: black;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+#searchItems .dataVisualize:last-child {
+  margin-bottom: 0;
+}
+
+#searchItems p {
+  margin: 0;
+}

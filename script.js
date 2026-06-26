@@ -11,6 +11,7 @@ const searchModal = document.getElementById("searchModal");
 const searchBtn = document.getElementById("searchBtn");
 const searchInput = document.getElementById("searchInput");
 const searchItems = document.getElementById("searchItems");
+const editModal = document.getElementById("editModal");
 const exitModalBtn = document.getElementById("exitModalBtn");
 
 const editHrName = document.getElementById("editHrName");
@@ -19,7 +20,32 @@ const editPhoneNumber = document.getElementById("editPhoneNumber");
 
 const alphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyz";
 
-let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+function isContact(data) {
+  return (
+    data &&
+    typeof data.name === "string" &&
+    typeof data.id === "string" &&
+    typeof data.phone === "string" &&
+    typeof data.vacancy === "string"
+  );
+}
+
+function loadContacts() {
+  try {
+    const data = JSON.parse(localStorage.getItem("contacts")) || [];
+
+    if (!Array.isArray(data)) {
+      return [];
+    }
+
+    return data.filter(isContact);
+  } catch {
+    return [];
+  }
+}
+
+let contacts = loadContacts();
+
 let editingId = null;
 
 function saveContacts() {
@@ -64,24 +90,55 @@ function validateContact(contact) {
     return false;
   }
 
+  const phoneRegex = /^((\+7|7|8)[0-9]{10})$/;
+
+  if (!phoneRegex.test(contact.phone.trim())) {
+    alert(
+      "телефон должен быть в формате +79991234567, 79991234567 или 89991234567",
+    );
+
+    return false;
+  }
+
   return true;
 }
 
 function renderApp() {
-  renderAlphabet();
   renderAllContacts();
+  for (const letter of alphabet) {
+    const count = countByLetter(letter);
+    updateLetterBtnContent(letter, count);
+  }
+}
+
+function updateLetterBtnContent(letter, count) {
+  const letterBtn = document.getElementById(`${letter}-letter-btn`);
+
+  if (letterBtn) {
+    letterBtn.textContent = `${letterBtn.dataset.letter.toUpperCase()}, ${count}`;
+  }
 }
 
 function renderAlphabet() {
   letterList.innerHTML = "";
   for (const letter of alphabet) {
-    letterList.innerHTML += `<div id='${letter}-letter' class="letterBox">
-      <div id='${letter}-letter-btn'
-      class="letterBtn"
-      onclick=toggleLetterContacts('${letter}-letter-items')>${letter.toUpperCase()}, 
-      ${countByLetter(letter)}</div>
-      <div id='${letter}-letter-items' class="letterItems hidden"></div>
-    </div>`;
+    const letterBox = document.createElement("div");
+    letterBox.className = "letterBox";
+    letterBox.id = `${letter}-letter`;
+    letterList.append(letterBox);
+
+    const letterBtn = document.createElement("button");
+    letterBtn.dataset.letter = letter;
+    letterBtn.type = "button";
+    letterBtn.id = `${letter}-letter-btn`;
+    letterBtn.className = "letterBtn";
+    letterBtn.dataset.action = "toggle-contracts";
+    letterBox.append(letterBtn);
+
+    const letterItems = document.createElement("div");
+    letterItems.id = `${letter}-letter-items`;
+    letterItems.className = "letterItems hidden";
+    letterBox.append(letterItems);
   }
 }
 
@@ -94,23 +151,46 @@ function renderAllContacts() {
     const letterItemsContainer = document.getElementById(letterItemsId);
 
     if (letterItemsContainer) {
-      letterItemsContainer.innerHTML += renderContactCard(data);
+      letterItemsContainer.append(renderContactCard(data));
     }
   }
 }
 
 function renderContactCard(data) {
-  return `<div class="dataVisualize">
-            <div>
-            <p><b>Имя</b>: ${data.name},</p>
-            <p><b>Вакансия</b>: ${data.vacancy},</p>
-            <p><b>Телефон</b>: ${data.phone}</p>
-            </div>
-            <div>
-                  <button onclick=openEditModal('${data.id}')>Изменить</button>
-                  <button onclick=removeContact('${data.id}')>Удалить</button>
-                </div>
-          </div>`;
+  const card = document.createElement("div");
+  card.className = "dataVisualize";
+
+  const info = document.createElement("div");
+  card.append(info);
+
+  const name = document.createElement("p");
+  info.append(name);
+  name.textContent = `Имя: ${data.name},`;
+
+  const vacancy = document.createElement("p");
+  info.append(vacancy);
+  vacancy.textContent = `Вакансия: ${data.vacancy},`;
+
+  const phone = document.createElement("p");
+  info.append(phone);
+  phone.textContent = `Телефон: ${data.phone}`;
+
+  const buttonGroup = document.createElement("div");
+  card.append(buttonGroup);
+
+  const editBtn = document.createElement("button");
+  editBtn.textContent = "Изменить";
+  editBtn.dataset.action = "edit";
+  editBtn.dataset.id = data.id;
+  buttonGroup.append(editBtn);
+
+  const removeBtn = document.createElement("button");
+  removeBtn.textContent = "Удалить";
+  removeBtn.dataset.action = "delete";
+  removeBtn.dataset.id = data.id;
+  buttonGroup.append(removeBtn);
+
+  return card;
 }
 
 function clearAllContactContainers() {
@@ -125,7 +205,7 @@ function countByLetter(letter) {
   let count = 0;
 
   for (const data of contacts) {
-    if (data.name.trim()[0].toLowerCase() === letter) {
+    if (data.name && data.name.trim()[0].toLowerCase() === letter) {
       count++;
     }
   }
@@ -133,9 +213,10 @@ function countByLetter(letter) {
   return count;
 }
 
-function toggleLetterContacts(letterItemsId) {
-  const letter = document.getElementById(letterItemsId);
-  letter.classList.toggle("hidden");
+function toggleLetterContacts(letter) {
+  const idx = `${letter}-letter-items`;
+  const letterEl = document.getElementById(idx);
+  letterEl.classList.toggle("hidden");
 }
 
 function removeContact(id) {
@@ -162,12 +243,13 @@ function openEditModal(id) {
 function searchContacts(query) {
   const lowerQuery = query.trim().toLowerCase();
 
+  searchItems.innerHTML = "";
+
   if (!lowerQuery) {
-    searchItems.innerHTML = "";
     return;
   }
 
-  let htmlContent = "";
+  let found = false;
 
   for (const data of contacts) {
     const matchesName = data.name.toLowerCase().includes(lowerQuery);
@@ -175,18 +257,19 @@ function searchContacts(query) {
     const matchesPhone = data.phone.toLowerCase().includes(lowerQuery);
 
     if (matchesName || matchesPhone || matchesVacancy) {
-      htmlContent += renderContactCard(data);
+      searchItems.append(renderContactCard(data));
+      found = true;
     }
   }
 
-  if (htmlContent.length === 0) {
-    searchItems.innerHTML = "<p>не нашел ничего</p>";
-  } else {
-    searchItems.innerHTML = htmlContent;
+  if (!found) {
+    const empty = document.createElement("p");
+    empty.textContent = "Не нашел";
+    searchItems.append(empty);
   }
 }
 
-contactForm.onsubmit = function (e) {
+contactForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const newContact = {
@@ -204,20 +287,30 @@ contactForm.onsubmit = function (e) {
   contactForm.reset();
 
   renderApp();
-};
+});
 
-clearBtn.onclick = function () {
+clearBtn.addEventListener("click", () => {
   contacts = [];
   saveContacts();
 
+  searchInput.value = "";
+  searchItems.innerHTML = "";
+
   renderApp();
-};
+});
 
 cancelEditBtn.addEventListener("click", () => {
   editModalContainer.classList.toggle("hidden");
 });
 
-submitEditBtn.addEventListener("click", (e) => {
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    searchModal.classList.add("hidden");
+    editModalContainer.classList.add("hidden");
+  }
+});
+
+editModal.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const contactIndex = contacts.findIndex(
@@ -259,4 +352,26 @@ exitModalBtn.addEventListener("click", () => {
   searchModal.classList.add("hidden");
 });
 
+letterList.addEventListener("click", (e) => {
+  const button = e.target.closest("button");
+
+  if (!button || !button.dataset.action) return;
+
+  const action = button.dataset.action;
+  const id = button.dataset.id;
+
+  if (action === "edit") {
+    openEditModal(id);
+  }
+
+  if (action === "remove") {
+    removeContact(id);
+  }
+
+  if (action === "toggle-contracts") {
+    toggleLetterContacts(button.dataset.letter);
+  }
+});
+
+renderAlphabet();
 renderApp();

@@ -10,6 +10,7 @@
     <h1>Список контактов на JS</h1>
 
     <form id="contactForm">
+      <label for="hrName">Имя HR</label>
       <input
         type="text"
         name="Имя"
@@ -19,6 +20,8 @@
         id="hrName"
         required
       />
+
+      <label for="vacancyName">Вакансия</label>
       <input
         type="text"
         name="Вакансия"
@@ -29,6 +32,7 @@
         required
       />
 
+      <label for="phoneNumber">Номер телефона</label>
       <input
         type="tel"
         name="Номер телефона"
@@ -49,8 +53,13 @@
 
     <div id="editModalContainer" class="hidden">
       <form id="editModal">
+        <label for="editHrName">Изменить имя HR</label>
         <input id="editHrName" type="text" required minlength="2" />
+
+        <label for="editVacancyName">Изменить вакансию</label>
         <input id="editVacancyName" type="text" required minlength="2" />
+
+        <label for="editPhoneNumber">Изменить номер</label>
         <input id="editPhoneNumber" type="tel" required />
 
         <button type="submit" id="submitEditBtn">Сохранить</button>
@@ -61,8 +70,10 @@
     <div id="searchModal" class="hidden">
       <div class="search-modal-header">
         <div>Поиск вакансий</div>
-        <button id="exitModalBtn">X</button>
+        <button type="button" id="exitModalBtn">X</button>
       </div>
+
+      <label for="searchInput">Искать по имени, вакансии, телефону</label>
       <input type="text" id="searchInput" />
       <div id="searchItems"></div>
     </div>

@@ -1,6 +1,10 @@
 {
   "name": "js-practice",
   "private": true,
+  "scripts": {
+    "build": "bun build script.ts --outfile script.js",
+    "watch": "bun build script.ts --outfile script.js --watch"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },

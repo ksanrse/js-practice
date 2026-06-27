@@ -7,7 +7,7 @@
     <title>Поиск вакансий</title>
   </head>
   <body>
-    <h1>Список контактов на JS</h1>
+    <h1>Список контактов на TS</h1>
 
     <form id="contactForm">
       <label for="hrName">Имя HR</label>
@@ -39,7 +39,7 @@
         value=""
         placeholder="Номер телефона"
         id="phoneNumber"
-        pattern="^((\+7|7|8)+([0-9]){10})$"
+        pattern="^(\+7|7|8)[0-9]{10}$"
         required
       />
 
@@ -47,27 +47,32 @@
     </form>
 
     <button type="button" id="clearBtn">Очистить список</button>
-    <button type="button" id="searchBtn">Искать по имени</button>
+    <button type="button" id="searchBtn">Поиск</button>
 
     <div id="letterList"></div>
 
-    <div id="editModalContainer" class="hidden">
+    <div id="editModalContainer" class="hidden" role="dialog" aria-modal="true">
       <form id="editModal">
-        <label for="editHrName">Изменить имя HR</label>
+        <label for="editHrName" name="editHrName">Изменить имя HR</label>
         <input id="editHrName" type="text" required minlength="2" />
 
         <label for="editVacancyName">Изменить вакансию</label>
         <input id="editVacancyName" type="text" required minlength="2" />
 
         <label for="editPhoneNumber">Изменить номер</label>
-        <input id="editPhoneNumber" type="tel" required />
+        <input
+          id="editPhoneNumber"
+          type="tel"
+          pattern="^(\+7|7|8)[0-9]{10}$"
+          required
+        />
 
-        <button type="submit" id="submitEditBtn">Сохранить</button>
+        <button type="submit">Сохранить</button>
         <button type="button" id="cancelEditBtn">Отмена</button>
       </form>
     </div>
 
-    <div id="searchModal" class="hidden">
+    <div id="searchModal" class="hidden" role="dialog" aria-modal="true">
       <div class="search-modal-header">
         <div>Поиск вакансий</div>
         <button type="button" id="exitModalBtn">X</button>
